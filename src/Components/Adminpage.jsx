@@ -3,26 +3,53 @@ import axios from "axios";
 
 function AdminPage() {
   const [data, setData] = useState(null);
-  const name = localStorage.getItem("name");
-  useEffect(() => {
-    // Retrieve the token from wherever it is stored (e.g., localStorage)
+  const [name, setName] = useState(localStorage.getItem("name"));
+  const [formData, setFormData] = useState({
+    bookName: "",
+    ISBN: "",
+    author: "",
+    bookReview: "",
+  });
+
+  // Function to handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  // Function to handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Retrieve the token from localStorage
     const token = localStorage.getItem("token");
 
-    axios
-      .get("/api/protected-resource", {
+    // Send the book data to the backend API
+    try {
+      const response = await axios.post("/api/add-book", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((response) => {
-        // Handle the response data as needed
-        setData(response.data);
-      })
-      .catch((error) => {
-        // Handle any errors
-        console.error("Error accessing protected resource:", error);
       });
-  }, []);
+
+      // Handle the response as needed
+      console.log("Book added successfully", response.data);
+
+      // Clear the form
+      setFormData({
+        bookName: "",
+        ISBN: "",
+        author: "",
+        bookReview: "",
+      });
+    } catch (error) {
+      // Handle any errors
+      console.error("Error adding book:", error);
+    }
+  };
 
   return (
     <div>
@@ -41,6 +68,52 @@ function AdminPage() {
         </div>
       </div>
       <h2>Welcome {name}</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="bookName">Book Name:</label>
+          <input
+            type="text"
+            name="bookName"
+            id="bookName"
+            value={formData.bookName}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="ISBN">ISBN:</label>
+          <input
+            type="text"
+            name="ISBN"
+            id="ISBN"
+            value={formData.ISBN}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="author">Author:</label>
+          <input
+            type="text"
+            name="author"
+            id="author"
+            value={formData.author}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="bookReview">Book Review:</label>
+          <textarea
+            name="bookReview"
+            id="bookReview"
+            value={formData.bookReview}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <button type="submit">Submit</button>
+      </form>
       {data && (
         <div>
           <p>Protected Resource Data:</p>

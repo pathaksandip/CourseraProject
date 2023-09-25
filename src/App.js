@@ -6,6 +6,7 @@ import Register from "./Components/Register";
 import axios from "axios";
 import Adminpage from "./Components/Adminpage";
 import AuthGuard from "./Components/AuthGuard";
+import ForgotPassword from "./Components/ForgetPassword";
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
 function App() {
@@ -23,6 +24,7 @@ function App() {
               </AuthGuard>
             }
           />
+          <Route path="/forgetpassword" element={<ForgotPassword />} />
         </Routes>
       </Router>
     </>

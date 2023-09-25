@@ -16,6 +16,7 @@ const UserData = new mongoose.Schema({
     type: String,
     required: true,
   },
+  otp: { type: String, default: null },
 });
 const User = mongoose.model("userdata", UserData);
 module.exports = User;

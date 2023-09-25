@@ -86,6 +86,11 @@ function User() {
             </Button>
           </div>
           <p>
+            <Link to={"/forgetpassword"} style={{ marginLeft: "70px" }}>
+              Forget Password
+            </Link>
+          </p>
+          <p>
             Don't Have an account <Link to={"/register"}> Register Here</Link>
           </p>
         </Form>

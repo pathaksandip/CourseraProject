@@ -180,8 +180,8 @@ app.post("/api/book", async (req, res) => {
   }
 });
 
-app.post("/api/change/password", authenticateToken, async (req, res) => {
-  const { email, currentPassword, newPassword } = req.body;
+app.put("/api/change/password", async (req, res) => {
+  const { email, newPassword } = req.body;
 
   try {
     // Find the user by email
@@ -191,19 +191,8 @@ app.post("/api/change/password", authenticateToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the current password matches the user's stored password
-    const isPasswordValid = await bcrypt.compare(
-      currentPassword,
-      user.password
-    );
-
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid current password" });
-    }
-
-    // Hash the new password and update it in the database
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
+    // Update the password in the database with the plain text new password
+    user.password = newPassword;
     await user.save();
 
     res.status(200).json({ message: "Password changed successfully" });

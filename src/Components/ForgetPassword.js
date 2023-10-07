@@ -74,28 +74,33 @@ function ForgotPassword() {
 
   const renderPasswordResetForm = () => {
     return (
-      <Form
-        onSubmit={handlePasswordReset}
-        className="justify-content-center mt-3"
-      >
+      <div className="justify-content-center mt-3">
         <Form.Group>
           <Form.Label>New Password:</Form.Label>
-          <Form.Control
+          {/* <Form.Control
             type="password"
             name="newPassword"
             // Add state and event handler for new password input
-            // value={newPassword}
+            value={newPassword}
             required
+          /> */}
+
+          <Form.Control
+            type="password"
+            placeholder="New password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
           />
         </Form.Group>
         <Button
           type="submit"
           variant="primary"
           className="d-block mx-auto mt-2"
+          onClick={handlePasswordReset}
         >
           Reset Password
         </Button>
-      </Form>
+      </div>
     );
   };
 
@@ -103,8 +108,7 @@ function ForgotPassword() {
     e.preventDefault();
 
     try {
-      // Add logic to send a request to reset the password with the new password
-      const response = await axios.post("/api/change/password", {
+      const response = await axios.put("/api/change/password", {
         email: email, // Include the email of the user requesting the password reset
         newPassword: newPassword, // Include the new password
       });
